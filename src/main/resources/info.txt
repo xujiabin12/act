@@ -1,0 +1,48 @@
+https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx1ffebf2bd2e6fe48&redirect_uri=http%3A%2F%2Fmobile.u-ef.cn%2Fueweb%2Findex.html%3FgroupId%3D157071833605079516&response_type=code&scope=snsapi_base&state=act#wechat_redirect
+
+101.209.201.109 
+
+Annsong606
+
+
+ue
+
+ycyx  
+
+ycyx123
+
+
+微信 
+
+ jason.zhou@ue-edu.com 
+ lizhenyu606ue 
+ 
+ 
+cd /usr/local/redis/redis-3.0.0
+ 
+ #启动redis
+src/redis-server &
+
+#关闭redis
+src/redis-cli shutdown
+
+
+$ src/redis-cli -a actredis
+127.0.0.1:6379> set foo bar
+OK
+
+
+
+启动nginx
+/usr/sbin/nginx -c /etc/nginx/nginx.conf 
+//查看启动日志
+systemctl status nginx.service
+
+
+
+
+使用 service 启动：service mysqld start
+
+使用 service 启动：service mysqld stop
+
+使用 service 启动：service mysqld restart

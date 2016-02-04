@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd         
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd         
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd         
+	http://www.springframework.org/schema/jee 
+	http://www.springframework.org/schema/jee/spring-jee-3.0.xsd         
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-3.0.xsd     
+	http://www.springframework.org/schema/data/jpa  
+	http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd">
+
+
+	<context:property-placeholder location="classpath*:*.properties" />
+	
+	<context:spring-configured />
+	
+	<!-- 自动扫描(自动注入) -->
+	<context:component-scan base-package="com.act">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	
+	
+
+	<aop:aspectj-autoproxy proxy-target-class="true" expose-proxy="true" />	
+	
+	
+	
+	 <bean class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" id="dataSource">
+        <property name="driverClassName" value="${database.driverClassName}"/>
+        <property name="url" value="${database.url}"/>
+        <property name="username" value="${database.username}"/>
+        <property name="password" value="${database.password}"/>
+        <property name="testOnBorrow" value="true"/>
+        <property name="testOnReturn" value="true"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="timeBetweenEvictionRunsMillis" value="1800000"/>
+        <property name="numTestsPerEvictionRun" value="3"/>
+        <property name="minEvictableIdleTimeMillis" value="1800000"/>
+        <property name="validationQuery" value="SELECT 1"/>
+         <property name="defaultAutoCommit" value="true" />
+    </bean>
+    
+     <!-- 创建一个实体管理器工厂 -->
+    <bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" id="entityManagerFactory">
+        <property name="persistenceUnitName" value="ueUnit"/>
+        <property name="dataSource" ref="dataSource"/>
+         <property name="loadTimeWeaver">
+        	<bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"></bean>
+        </property>
+    </bean>
+    
+    
+    <bean class="org.springframework.orm.jpa.JpaTransactionManager" id="transactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+    
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+   
+   <!-- 启用扫描并自动创建代理的功能 -->
+    <jpa:repositories base-package="com.act.dao" entity-manager-factory-ref="entityManagerFactory">
+    </jpa:repositories>
+	
+</beans>
