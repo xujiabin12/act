@@ -12,6 +12,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.act.beans.enums.RoleEnums;
 import com.act.beans.enums.YesOrNo;
 import com.act.dao.CommonDao;
 import com.act.dao.bean.Users;
@@ -88,6 +89,7 @@ public class UserServices {
 		u.setHeadimg(String.valueOf(map.get("headimgurl")));
 		u.setOpenid(String.valueOf(map.get("openid")));
 		u.setState(YesOrNo.yes.value);
+		u.setRole(RoleEnums.student.value);
 		dao.add(u);
 		
 		hxService.register(u.getUsername(), PASSWORD,u.getNickname());
