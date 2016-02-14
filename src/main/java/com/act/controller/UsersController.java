@@ -60,12 +60,12 @@ public class UsersController extends AbstractController{
 	//用户列表
 	@RequestMapping(value="/userList",method=RequestMethod.POST)
 	@ResponseBody
-	public String userList(@RequestParam(value="nickname")String nickname,
-						   @RequestParam(value="username")String username){
+	public String userList(@RequestParam(value="nickname",required=false)String nickname, 
+						   @RequestParam(value="username",required=false)String username){
 		try {
 			List<Users> list = userService.userList(nickname, username);
 			 
-			return Response.SUCCESS().putAll(JsonUtil.Object2Map(list)).toJson();
+			return Response.SUCCESS().put("list", list).toJson();
 			
 		}catch (UeFailException e) {
 			return Response.FAIL(e.getMessage()).toJson();
@@ -82,7 +82,7 @@ public class UsersController extends AbstractController{
 		try {
 			List<Users> list = userService.teacherList(nickname, username);
 			 
-			return Response.SUCCESS().putAll(JsonUtil.Object2Map(list)).toJson();
+			return Response.SUCCESS().put("list", list).toJson();
 			
 		}catch (UeFailException e) {
 			return Response.FAIL(e.getMessage()).toJson();

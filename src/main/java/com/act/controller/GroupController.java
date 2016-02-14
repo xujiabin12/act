@@ -123,7 +123,7 @@ public class GroupController extends AbstractController{
 		//群组列表
 		@RequestMapping(value="/groupList",method=RequestMethod.POST)
 		@ResponseBody
-		public String groupList(@RequestParam(value="groupName")String groupName){
+		public String groupList(@RequestParam(value="groupName",required=false)String groupName){
 			try {
 				
 				return groupService.groupList(groupName).toJson();
@@ -161,6 +161,24 @@ public class GroupController extends AbstractController{
 			try {
 				
 				return groupService.deleteGroup(groupid).toJson();
+				
+			}catch (UeFailException e) {
+				return Response.FAIL(e.getMessage()).toJson();
+			}catch(Exception e1){
+				return Response.FAIL("删除群组失败").toJson();
+			}
+			
+		}
+		
+		
+		//删除群组
+		@RequestMapping(value="/outGroup",method=RequestMethod.POST)
+		@ResponseBody
+		public String outGroup(@RequestParam(value="groupid",required=true)String groupid,
+							   @RequestParam(value="userid",required=true)String userid){
+			try {
+				
+				return groupService.removeUserForGroup(groupid, userid).toJson();
 				
 			}catch (UeFailException e) {
 				return Response.FAIL(e.getMessage()).toJson();

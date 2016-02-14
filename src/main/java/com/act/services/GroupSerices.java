@@ -61,7 +61,7 @@ public class GroupSerices {
 		
 		List<Groups> list = dao.queryList(sql, map);
 		
-		return Response.SUCCESS().putAll(JsonUtil.Object2Map(list));
+		return Response.SUCCESS().put("list", list);
 	}
 	
 	//查询群组下的成员
@@ -69,13 +69,13 @@ public class GroupSerices {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		String sql = "from Users where userid in (select userid from usergroup where groupid = :groupid)";
+		String sql = "from Users where userid in (select userid from usergroup where state !='1' and groupid = :groupid)";
 		
 		map.put("groupid", groupid);
 		
 		List<Users> list = dao.queryList(sql, map);
 		
-		return Response.SUCCESS().putAll(JsonUtil.Object2Map(list));
+		return Response.SUCCESS().put("list", list);
 	}
 	
 	
@@ -137,7 +137,7 @@ public class GroupSerices {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		String sql = "update Groups set state = '1' where groupid = :groupid and userid = :userid ";
+		String sql = "update UserGroup set state = '1' where groupid = :groupid and userid = :userid ";
 		
 		map.put("groupid", groupid);
 		map.put("userid", userid);

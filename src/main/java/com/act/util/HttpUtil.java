@@ -23,6 +23,11 @@ public class HttpUtil {
 	private static Logger logger = LoggerFactory.getLogger(HttpUtil.class);
 
 	 static String contentType = "application/json";
+	 
+	 
+	 public static void main(String[] s) throws Exception{
+		 sendRequestByPostGiveContentType("http://127.0.0.1:8080/act/users/userList","",contentType,"POST");
+	 }
 
 	public static String doPost(String url, Map<String, String> params) throws Exception{
 		StringBuffer sb = new StringBuffer();
