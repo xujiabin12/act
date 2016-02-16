@@ -1,5 +1,7 @@
 package com.act.controller;
 
+import java.net.URLEncoder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +41,6 @@ public class WxController {
 			return Response.FAIL("初始化jsapi失败").toJson();
 		}
 	}
-	
-	
 	
 
 }

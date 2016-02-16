@@ -1,6 +1,8 @@
 package com.act.controller;
 
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -20,6 +22,7 @@ import com.act.services.UserServices;
 import com.act.services.WxServices;
 import com.act.util.JsonUtil;
 import com.act.util.Response;
+import com.act.util.wx.WxConfig;
  
 
 
@@ -42,6 +45,25 @@ public class GroupController extends AbstractController{
 	
 	@Autowired
 	WxServices wxService;
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/createUrl",method=RequestMethod.POST)
+	public String createUrl(@RequestParam(value="groupId",required=true)String groupId){
+		logger.info("创建加入群组URL:{}", groupId);
+		
+		StringBuffer sb = new StringBuffer(WxConfig.STARTAUTHURL);
+		
+		String domain = "http://mobile.u-ef.cn/index.html?groupId="+groupId;
+		try {
+			domain = URLEncoder.encode(domain, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		sb.append(domain).append(WxConfig.ENDAUTHURL);
+		
+		return Response.SUCCESS().put("url", sb.toString()).toJson();
+	}
 	
 	
 	//点击这个连接，进入群组

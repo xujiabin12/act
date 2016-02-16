@@ -36,6 +36,7 @@ public class Groups implements Serializable{
 		this.groupname = groupname;
 		this.owner = owner;
 		this.groupid = groupid;
+		this.state = "0";
 	}
 	
 	

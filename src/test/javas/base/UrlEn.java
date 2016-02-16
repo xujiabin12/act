@@ -11,7 +11,7 @@ public class UrlEn {
 		
 		String url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx1ffebf2bd2e6fe48&redirect_uri=";
 		
-		String s = "http://mobile.u-ef.cn/mobile/index.html?groupId=157079443297272296";
+		String s = "http://mobile.u-ef.cn/index.html?groupId=157079443297272296";
 	
 		s = URLEncoder.encode(s, "utf-8");
 		
