@@ -4,21 +4,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.act.beans.enums.RoleEnums;
 import com.act.beans.enums.YesOrNo;
 import com.act.dao.CommonDao;
 import com.act.dao.bean.Users;
 import com.act.util.Content;
 import com.act.util.IdBuilder;
-import com.act.util.JsonUtil;
 import com.act.util.Response;
 import com.act.util.StringUtil;
 
@@ -50,11 +47,11 @@ public class UserServices {
 		String sql = "from Users where  1=1 ";
 		if(StringUtil.isNotBlank(nickName)){
 			sql += " and nickname like :nickname";
-			map.put("nickname", "'%"+nickName+"%'");
+			map.put("nickname", "%"+nickName+"%");
 		}
 		if(StringUtil.isNotBlank(userName)){
 			sql += " and username like :username";
-			map.put("username", "'%"+userName+"%'");
+			map.put("username", userName);
 		}
 		
 		return dao.queryList(sql, map);
@@ -77,6 +74,15 @@ public class UserServices {
 		}
 		
 		return dao.queryList(sql, map);
+	}
+	
+	public void setTeacher(String userid)throws Exception{
+		logger.info("setTeacher:{}",userid);
+		
+		Users u = dao.queryObject(Users.class, userid);
+		u.setRole(RoleEnums.teacher.value);
+		dao.update(u);
+		
 	}
 	
 	 

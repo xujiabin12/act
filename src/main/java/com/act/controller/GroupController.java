@@ -72,6 +72,7 @@ public class GroupController extends AbstractController{
 		}catch (UeFailException e) {
 			return Response.FAIL(e.getMessage()).toJson();
 		}catch(Exception e1){
+			logger.error("错误",e1);
 			return Response.FAIL("进入群组失败").toJson();
 		}
 		
@@ -94,6 +95,7 @@ public class GroupController extends AbstractController{
 		}catch (UeFailException e) {
 			return Response.FAIL(e.getMessage()).toJson();
 		}catch(Exception e1){
+			logger.error("错误",e1);
 			return Response.FAIL("加入群组失败").toJson();
 		}
 		
@@ -114,6 +116,7 @@ public class GroupController extends AbstractController{
 			}catch (UeFailException e) {
 				return Response.FAIL(e.getMessage()).toJson();
 			}catch(Exception e1){
+				logger.error("错误",e1);
 				return Response.FAIL("创建群组失败").toJson();
 			}
 			
@@ -131,6 +134,7 @@ public class GroupController extends AbstractController{
 			}catch (UeFailException e) {
 				return Response.FAIL(e.getMessage()).toJson();
 			}catch(Exception e1){
+				logger.error("错误",e1);
 				return Response.FAIL("查询群组失败").toJson();
 			}
 		}
@@ -147,6 +151,8 @@ public class GroupController extends AbstractController{
 			}catch (UeFailException e) {
 				return Response.FAIL(e.getMessage()).toJson();
 			}catch(Exception e1){
+				logger.error("错误",e1);
+				e1.printStackTrace();
 				return Response.FAIL("查询群组成员失败").toJson();
 			}
 		}
@@ -165,6 +171,7 @@ public class GroupController extends AbstractController{
 			}catch (UeFailException e) {
 				return Response.FAIL(e.getMessage()).toJson();
 			}catch(Exception e1){
+				logger.error("错误",e1);
 				return Response.FAIL("删除群组失败").toJson();
 			}
 			
@@ -183,6 +190,7 @@ public class GroupController extends AbstractController{
 			}catch (UeFailException e) {
 				return Response.FAIL(e.getMessage()).toJson();
 			}catch(Exception e1){
+				logger.error("错误",e1);
 				return Response.FAIL("删除群组失败").toJson();
 			}
 			

@@ -18,6 +18,7 @@ import com.act.exception.UeFailException;
 import com.act.services.UserServices;
 import com.act.util.JsonUtil;
 import com.act.util.Response;
+import com.act.util.StringUtil;
  
 
 /**
@@ -46,11 +47,13 @@ public class UsersController extends AbstractController{
 		try {
 			Users u =  userService.login(username,pwd);
 			u.setMgrpwd("");
-			if(u.getRole().equals(RoleEnums.student.value)){
+			u.setPassword("");
+			if(StringUtil.isBlank(u.getRole()) || u.getRole().equals(RoleEnums.student.value)){
 				return Response.FAIL("登录人权限不对").toJson();
 			}
 			return Response.SUCCESS().putAll(JsonUtil.Object2Map(u)).toJson();
 		} catch (Exception e) {
+			logger.error("错误",e);
 			e.printStackTrace();
 			logger.error("loginForMgr",e);
 		}
@@ -70,6 +73,7 @@ public class UsersController extends AbstractController{
 		}catch (UeFailException e) {
 			return Response.FAIL(e.getMessage()).toJson();
 		}catch(Exception e1){
+			logger.error("错误",e1);
 			return Response.FAIL("查询失败").toJson();
 		}
 	}
@@ -87,6 +91,7 @@ public class UsersController extends AbstractController{
 		}catch (UeFailException e) {
 			return Response.FAIL(e.getMessage()).toJson();
 		}catch(Exception e1){
+			logger.error("错误",e1);
 			return Response.FAIL("查询失败").toJson();
 		}
 	}
@@ -103,13 +108,19 @@ public class UsersController extends AbstractController{
 	}
 	
 	
-	@RequestMapping(value="/ss",method=RequestMethod.GET)
+	@RequestMapping(value="/setTeacher",method=RequestMethod.POST)
 	@ResponseBody
-	public String ss(){
+	public String setTeacher(@RequestParam(value="userid",required=true)String userid){
 		
-		logger.info("stopSpeak==");
+		logger.info("setTeacher==");
+		
+		try {
+			userService.setTeacher(userid);
+		} catch (Exception e) {
+			logger.error("错误",e);
+		}
 		 
-		return "fffffffffffff";
+		return Response.SUCCESS().toJson();
 		
 	}
 	

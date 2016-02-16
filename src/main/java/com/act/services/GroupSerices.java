@@ -52,7 +52,7 @@ public class GroupSerices {
 	public Response groupList(String groupname)throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		String sql = "from Groups where state = '1' ";
+		String sql = "from Groups where state = '0' ";
 		
 		if(StringUtil.isNotBlank(groupname)){
 			sql += " and groupname like :groupname";
@@ -69,11 +69,11 @@ public class GroupSerices {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		String sql = "from Users where userid in (select userid from usergroup where state !='1' and groupid = :groupid)";
+		String sql = "from Users where userid in (select userid from UserGroup where state ='0' and groupid = :groupid)";
 		
 		map.put("groupid", groupid);
 		
-		List<Users> list = dao.queryList(sql, map);
+		List list = dao.queryListObj(sql, map);
 		
 		return Response.SUCCESS().put("list", list);
 	}
