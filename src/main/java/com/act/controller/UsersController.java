@@ -17,6 +17,7 @@ import com.act.dao.bean.Users;
 import com.act.exception.UeFailException;
 import com.act.services.UserServices;
 import com.act.util.JsonUtil;
+import com.act.util.Md5ConverterUtil;
 import com.act.util.Response;
 import com.act.util.StringUtil;
  
@@ -45,20 +46,41 @@ public class UsersController extends AbstractController{
 							  @RequestParam(value="pwd",required=true)String pwd){
 		logger.info("loginForMgr=={}",username);
 		try {
-			Users u =  userService.login(username,pwd);
-			u.setMgrpwd("");
-			u.setPassword("");
+			Users u =  userService.login(username,Md5ConverterUtil.Md5(pwd));
+			if(u == null){
+				return Response.FAIL("用户名或密码错误").toJson();
+			}
 			if(StringUtil.isBlank(u.getRole()) || u.getRole().equals(RoleEnums.student.value)){
 				return Response.FAIL("登录人权限不对").toJson();
 			}
+			u.setMgrpwd("");
+			u.setPassword("");
 			return Response.SUCCESS().putAll(JsonUtil.Object2Map(u)).toJson();
 		} catch (Exception e) {
-			logger.error("错误",e);
 			e.printStackTrace();
 			logger.error("loginForMgr",e);
 		}
 		return Response.FAIL("登录失败").toJson();
 	}
+	
+	
+	
+		@RequestMapping(value="/setMgrPass",method=RequestMethod.POST)
+		@ResponseBody
+		public String setMgrPass(@RequestParam(value="pass",required=true)String pass, 
+							   @RequestParam(value="userid",required=true)String userid){
+			try {
+				userService.setMgrPass(userid, pass);
+				 
+				return Response.SUCCESS().toJson();
+				
+			}catch (UeFailException e) {
+				return Response.FAIL(e.getMessage()).toJson();
+			}catch(Exception e1){
+				logger.error("错误",e1);
+				return Response.FAIL("设置失败").toJson();
+			}
+		}
 	
 	//用户列表
 	@RequestMapping(value="/userList",method=RequestMethod.POST)

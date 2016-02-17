@@ -83,22 +83,36 @@ public class GroupSerices {
 	//加入群组
 	public Response joinGroup(String groupid,String userid) throws Exception{
 		logger.info("==joinGroup=={},{}",groupid,userid);
-		
-		Users user = dao.queryObject(Users.class, userid);
-		
-		hxService.addMember(groupid,user.getUsername());
-		
-		UserGroup ug = new UserGroup();
-		ug.setGroupid(groupid);
-		ug.setId(IdBuilder.getID());
-		ug.setUserid(userid);
-		ug.setState(YesOrNo.yes.value);
-		
-		dao.add(ug);
-		
-		
+		int count = selectByUserIdAndGroupid(groupid,userid);
+		if(count < 1){
+			Users user = dao.queryObject(Users.class, userid);
+			
+			hxService.addMember(groupid,user.getUsername());
+			
+			UserGroup ug = new UserGroup();
+			ug.setGroupid(groupid);
+			ug.setId(IdBuilder.getID());
+			ug.setUserid(userid);
+			ug.setState(YesOrNo.yes.value);
+			
+			dao.add(ug);
+		}
 		return Response.SUCCESS();
 	}
+	
+	
+	   //查看某个人是否在某个群组
+	   public int selectByUserIdAndGroupid(String groupid,String userid) throws Exception{
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			String sql = "from UserGroup where groupid = :groupid and userid = :userid ";
+			
+			map.put("groupid", groupid);
+			map.put("userid", userid);
+			
+			return dao.queryCount(sql, map);
+		}
 	
 	
 	
@@ -137,7 +151,7 @@ public class GroupSerices {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		String sql = "update UserGroup set state = '1' where groupid = :groupid and userid = :userid ";
+		String sql = "delete from UserGroup where groupid = :groupid and userid = :userid ";
 		
 		map.put("groupid", groupid);
 		map.put("userid", userid);

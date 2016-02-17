@@ -4,18 +4,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.act.beans.enums.RoleEnums;
 import com.act.beans.enums.YesOrNo;
 import com.act.dao.CommonDao;
 import com.act.dao.bean.Users;
 import com.act.util.Content;
 import com.act.util.IdBuilder;
+import com.act.util.Md5ConverterUtil;
 import com.act.util.Response;
 import com.act.util.StringUtil;
 
@@ -90,7 +93,7 @@ public class UserServices {
 	public Users addUser(Map map) throws Exception{
 		logger.info("==adduser=={}",map);
 		String userName = getUserName();
-		Users u = new Users(IdBuilder.getID(), userName,String.valueOf(map.get("nickname")), PASSWORD);
+		Users u = new Users(IdBuilder.getID(), userName,String.valueOf(map.get("nickname")), "");
 		u.setSex(String.valueOf(map.get("sex")));
 		u.setHeadimg(String.valueOf(map.get("headimgurl")));
 		u.setOpenid(String.valueOf(map.get("openid")));
@@ -136,7 +139,14 @@ public class UserServices {
 	}
 	
 	
-	
+	public void setMgrPass(String userid,String pass)throws Exception{
+		logger.info("setMgrPass:{},{}",userid,pass);
+		
+		Users u = dao.queryObject(Users.class, userid);
+		u.setMgrpwd(Md5ConverterUtil.Md5(pass));
+		
+		dao.update(u);
+	}
 	
 	public Users login(String username,String password) throws Exception{
 		logger.info("login:{},{}",username,password);
