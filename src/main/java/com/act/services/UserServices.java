@@ -187,6 +187,8 @@ public class UserServices {
 		
 		Object obj = redisTemplate.opsForValue().get(Content.KEYSTOPSPEAK+userId);
 		
+		logger.info("===="+obj);
+		
 		if(obj != null){
 			stopSpeak = "0";
 		}
