@@ -168,6 +168,19 @@ public class UserServices {
 	
 	
 	/**
+	 * 永久禁言
+	 * @return
+	 */
+	public Response foreverStopSpeak(String userId){
+		
+		logger.info("==foreverStopSpeak={}",userId);
+		
+		redisTemplate.opsForValue().set(Content.KEYSTOPSPEAK+userId, YesOrNo.yes.value);
+
+		return Response.SUCCESS();
+	}
+	
+	/**
 	 * 禁言10分钟
 	 * @return
 	 */
@@ -196,28 +209,6 @@ public class UserServices {
 		return Response.SUCCESS().put("isStopSpeak", stopSpeak);
 	}
 	
-	
-	public Response authInfo(String realName,String userId) throws Exception{
-		logger.info("=authInfo：{},{},{}",new String[]{realName,userId});
-		if(StringUtil.hasEmpty(realName,userId)){
-			return Response.FAIL("验证信息不能为空");
-		}
-		Users user = dao.queryObject(Users.class, userId);
-		user.setRealname(realName);
-		user.setAuth("1");
-		dao.update(user);
-		
-		return Response.SUCCESS();
-	}
-	
-	
-	public Response passAuth(String userId)throws Exception{
-		logger.info("=passAuth：{}",userId);
-		Users user = dao.queryObject(Users.class, userId);
-		user.setAuth("0");
-		dao.update(user);
-		return Response.SUCCESS();
-	}
 	
 	
 

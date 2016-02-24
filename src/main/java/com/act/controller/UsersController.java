@@ -118,6 +118,16 @@ public class UsersController extends AbstractController{
 		}
 	}
 	
+	@RequestMapping(value="/foreverStopSpeak",method=RequestMethod.POST)
+	@ResponseBody
+	public String foreverStopSpeak(@RequestParam(value="userId",required=true)String userId){
+		
+		logger.info("foreverStopSpeak=={}",userId);
+		 
+		return userService.foreverStopSpeak(userId).toJson();
+		
+	}
+	
 	
 	@RequestMapping(value="/stopSpeak",method=RequestMethod.POST)
 	@ResponseBody

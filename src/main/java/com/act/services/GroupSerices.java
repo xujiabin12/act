@@ -7,6 +7,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import com.act.dao.CommonDao;
 import com.act.dao.bean.Groups;
 import com.act.dao.bean.UserGroup;
 import com.act.dao.bean.Users;
+import com.act.util.Content;
 import com.act.util.IdBuilder;
 import com.act.util.JsonUtil;
 import com.act.util.Response;
@@ -32,9 +34,25 @@ public class GroupSerices {
 	@Autowired
 	HxServices hxService;
 	
+	@Autowired
+    RedisTemplate redisTemplate;
+	
 	
 	@Autowired
 	CommonDao dao;
+	
+	
+	public void setJoinGroupUrl(String url){
+		logger.info("=setJoinGroupUrl:{}",url);
+		redisTemplate.opsForValue().set(Content.GROUPURL, url);
+	}
+	
+	public Response getJoinGroupUrl(){
+		logger.info("=getJoinGroupUrl=");
+		Object obj = redisTemplate.opsForValue().get(Content.GROUPURL);
+		String url = obj!=null?obj.toString():"";
+		return Response.SUCCESS().put("url", url);
+	}
 	
 	
 	

@@ -217,6 +217,27 @@ public class GroupController extends AbstractController{
 			}
 			
 		}
+		
+		
+		//设置加入群组URL
+		@RequestMapping(value="/setJoinGroupUrl",method=RequestMethod.POST)
+		@ResponseBody
+		public String setJoinGroupUrl(@RequestParam(value="url",required=true)String url){
+			
+			groupService.setJoinGroupUrl(url);
+			
+			return Response.SUCCESS().toJson();
+			
+		}
+		
+		//设置加入群组URL
+		@RequestMapping(value="/getJoinGroupUrl",method=RequestMethod.POST)
+		@ResponseBody
+		public String getJoinGroupUrl(){
+			
+			return groupService.getJoinGroupUrl().toJson();
+			
+		}
 	
 	
 

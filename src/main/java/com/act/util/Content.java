@@ -13,6 +13,8 @@ public class Content {
 	
 	public static final String KEYSTOPSPEAK = CACHEINDEX+"top:speak:";
 	
+	public static final String GROUPURL = CACHEINDEX +"group:join:url";
+	
 	
 	public static final String WX_TOKEN = "wx:token";
 	
