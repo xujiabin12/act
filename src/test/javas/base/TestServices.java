@@ -5,9 +5,11 @@ import net.sf.json.JSONObject;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.act.dao.bean.GroupHistory;
 import com.act.services.GroupSerices;
 import com.act.services.HxServices;
 import com.act.services.UserServices;
+import com.act.util.IdBuilder;
 
 
 public class TestServices extends TestEnviroment{
@@ -52,7 +54,14 @@ public class TestServices extends TestEnviroment{
 		
 //		groupService.joinGroup("157079443297272296", "b14c588e25414519b5d267603af7389c");
 		
-		hxService.selectHistory();
+//		hxService.selectHistory();
+		
+		
+//		GroupHistory g = new GroupHistory(IdBuilder.getID(),"9999999999","徐佳彬","徐佳彬","徐佳彬","徐佳彬","徐佳彬");
+//		groupService.saveMsg(g);;
+		
+		
+		System.out.println(groupService.queryHistoryByPage("163388045406503384", 2).toJson());
 		
 		
 	}

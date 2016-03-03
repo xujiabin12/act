@@ -6,6 +6,9 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.act.util.DateUtils;
 
 @Entity
 @Table(name="grouphistory")
@@ -14,13 +17,13 @@ public class GroupHistory  implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	private String historyId; 
+	private String historyid; 
 	
-	private String groupId;
+	private String groupid;
 	
-	private String nickName;
+	private String nickname;
 	
-	private String userName;
+	private String username;
 	
 	private String headimg;
 	
@@ -30,49 +33,52 @@ public class GroupHistory  implements Serializable{
 	
 	private Date createdt;
 	
+	@Transient
+	private String createdtStr;
+	
 	public GroupHistory(){}
 	
-	public GroupHistory(String groupId,String nickName,String userName,String headimg,String role,String message){
-		this.groupId = groupId;
-		this.nickName = nickName;
-		this.userName = userName;
+	public GroupHistory(String historyId,String groupId,String nickName,String userName,String headimg,String role,String message){
+		this.historyid = historyId;
+		this.groupid = groupId;
+		this.nickname = nickName;
+		this.username = userName;
 		this.headimg = headimg;
 		this.role = role;
 		this.message = message;
 		this.createdt = new Date();
 	}
-	
 
-	public String getHistoryId() {
-		return historyId;
+	public String getHistoryid() {
+		return historyid;
 	}
 
-	public void setHistoryId(String historyId) {
-		this.historyId = historyId;
+	public void setHistoryid(String historyid) {
+		this.historyid = historyid;
 	}
 
-	public String getGroupId() {
-		return groupId;
+	public String getGroupid() {
+		return groupid;
 	}
 
-	public void setGroupId(String groupId) {
-		this.groupId = groupId;
+	public void setGroupid(String groupid) {
+		this.groupid = groupid;
 	}
 
-	public String getNickName() {
-		return nickName;
+	public String getNickname() {
+		return nickname;
 	}
 
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getHeadimg() {
@@ -106,8 +112,18 @@ public class GroupHistory  implements Serializable{
 	public void setCreatedt(Date createdt) {
 		this.createdt = createdt;
 	}
+
+	public String getCreatedtStr() {
+		createdtStr = DateUtils.formatDatetime(this.createdt);
+		return createdtStr;
+	}
+
+	public void setCreatedtStr(String createdtStr) {
+		this.createdtStr = createdtStr;
+	}
 	
-	
+
+	 
 	
 	
 

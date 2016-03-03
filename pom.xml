@@ -582,7 +582,7 @@
 				<database.username>root</database.username>
 				<database.password>act!@#</database.password>
 				
-				<log.level>INFO</log.level>
+				<log.level>DEBUG</log.level>
 				<log.dirs>/server/logs/act/</log.dirs>
 				<log.appendName>infolog,errorlog</log.appendName>
                 

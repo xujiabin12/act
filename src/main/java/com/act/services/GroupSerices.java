@@ -47,6 +47,7 @@ public class GroupSerices {
 		try {
 			dao.add(gh);
 		} catch (Exception e) {
+			logger.error("保存信息失败",e);
 			e.printStackTrace();
 		}
 	}
@@ -56,6 +57,7 @@ public class GroupSerices {
 		logger.info("==queryByPage=={},{}",groupId,pageNo);
 		pageNo = (pageNo - 1) * pageSize;
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
 		
 		String sql = "from GroupHistory where groupId = :groupId order by createdt desc ";
 		List<GroupHistory> list = dao.queryListByPage(sql, map, pageNo, pageSize);

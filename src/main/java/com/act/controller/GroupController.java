@@ -66,8 +66,7 @@ public class GroupController extends AbstractController{
 							   @RequestParam(value="headimg",required=true)String headimg,
 							   @RequestParam(value="message",required=true)String message,
 							   @RequestParam(value="role",required=true)String role){
-		GroupHistory g = new GroupHistory(groupId,nickName,userName,headimg,role,message);
-		g.setHistoryId(IdBuilder.getID());
+		GroupHistory g = new GroupHistory(IdBuilder.getID(),groupId,nickName,userName,headimg,role,message);
 		groupService.saveMsg(g);;
 		
 		return Response.SUCCESS().toJson();
