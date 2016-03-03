@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.act.services.GroupSerices;
+import com.act.services.HxServices;
 import com.act.services.UserServices;
 
 
@@ -33,6 +34,9 @@ public class TestServices extends TestEnviroment{
 	@Autowired
 	UserServices userService;
 	
+	@Autowired
+	HxServices hxService;
+	
 	@Test
 	public void testServer()throws Exception{
 		
@@ -47,6 +51,8 @@ public class TestServices extends TestEnviroment{
 //		groupService.createGroup("李四群组", "190d67586f0c4eacbe24d2e53d3b8b8b", "李四聊天群组");
 		
 //		groupService.joinGroup("157079443297272296", "b14c588e25414519b5d267603af7389c");
+		
+		hxService.selectHistory();
 		
 		
 	}

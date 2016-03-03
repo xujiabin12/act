@@ -1,5 +1,6 @@
 package com.act.services;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +100,7 @@ public class UserServices {
 		u.setOpenid(String.valueOf(map.get("openid")));
 		u.setState(YesOrNo.yes.value);
 		u.setRole(RoleEnums.student.value);
+		u.setCreatedt(new Date());
 		dao.add(u);
 		
 		hxService.register(u.getUsername(), PASSWORD,u.getNickname());

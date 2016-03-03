@@ -32,6 +32,17 @@ public class HxServices {
     private RedisTemplate redisTemplate;
 	
 	
+	
+	
+	public void selectHistory()throws Exception{
+		String url = Content.REQUESTURL+"chatmessages?limit=20";
+		
+		HttpUtil.doGet(url, "", getToken());
+	}
+	
+	
+	
+	
 	//删除群组
 	public void deleteGroup(String groupid)throws Exception{
 		String url = Content.REQUESTURL+"chatgroups/"+groupid;

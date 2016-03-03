@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.act.beans.enums.ErrorCode;
+import com.act.dao.bean.GroupHistory;
 import com.act.dao.bean.Users;
 import com.act.exception.UeFailException;
 import com.act.services.GroupSerices;
 import com.act.services.UserServices;
 import com.act.services.WxServices;
+import com.act.util.IdBuilder;
 import com.act.util.JsonUtil;
 import com.act.util.Response;
 import com.act.util.wx.WxConfig;
@@ -45,6 +47,33 @@ public class GroupController extends AbstractController{
 	
 	@Autowired
 	WxServices wxService;
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/queryHistory",method=RequestMethod.POST)
+	public String queryHistory(@RequestParam(value="groupId",required=true)String groupId,
+							   @RequestParam(value="pageNo",required=true)int pageNo){
+		
+		return groupService.queryHistoryByPage(groupId, pageNo).toJson();
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/sendMsg",method=RequestMethod.POST)
+	public String sendMsg(@RequestParam(value="groupId",required=true)String groupId,
+							   @RequestParam(value="nickName",required=true)String nickName,
+							   @RequestParam(value="userName",required=true)String userName,
+							   @RequestParam(value="headimg",required=true)String headimg,
+							   @RequestParam(value="message",required=true)String message,
+							   @RequestParam(value="role",required=true)String role){
+		GroupHistory g = new GroupHistory(groupId,nickName,userName,headimg,role,message);
+		g.setHistoryId(IdBuilder.getID());
+		groupService.saveMsg(g);;
+		
+		return Response.SUCCESS().toJson();
+	}
+	
+	
 	
 	
 	@ResponseBody

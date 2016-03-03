@@ -13,12 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.act.beans.enums.YesOrNo;
 import com.act.dao.CommonDao;
+import com.act.dao.bean.GroupHistory;
 import com.act.dao.bean.Groups;
 import com.act.dao.bean.UserGroup;
 import com.act.dao.bean.Users;
 import com.act.util.Content;
 import com.act.util.IdBuilder;
-import com.act.util.JsonUtil;
 import com.act.util.Response;
 import com.act.util.StringUtil;
 
@@ -41,6 +41,28 @@ public class GroupSerices {
 	@Autowired
 	CommonDao dao;
 	
+	private int pageSize = 20;
+	
+	public void saveMsg(GroupHistory gh){
+		try {
+			dao.add(gh);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public Response queryHistoryByPage(String groupId,int pageNo){
+		logger.info("==queryByPage=={},{}",groupId,pageNo);
+		pageNo = (pageNo - 1) * pageSize;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String sql = "from GroupHistory where groupId = :groupId order by createdt desc ";
+		List<GroupHistory> list = dao.queryListByPage(sql, map, pageNo, pageSize);
+		
+		return Response.SUCCESS().put("list", list).put("pageNo", pageNo + 1);
+	}
+	
 	
 	public void setJoinGroupUrl(String url){
 		logger.info("=setJoinGroupUrl:{}",url);
@@ -57,8 +79,20 @@ public class GroupSerices {
 	
 	
 	public Response deleteGroup(String groupid)throws Exception{
-		
+		logger.info("=删除群组=");
 		hxService.deleteGroup(groupid);
+		logger.info("=删除本地群组=");
+		dao.remove(Groups.class, groupid);
+		logger.info("=删除群成员关系绑定=");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupid", groupid);
+		
+		String sql = "delete from UserGroup where groupid = :groupid";
+		
+		dao.executeUpdate(sql, map);
+		logger.info("=删除聊天记录=");
+		String sql1 = "delete from GroupHistory where groupId = :groupid";
+		dao.executeUpdate(sql1, map);
 		
 		return Response.SUCCESS(); 
 	}

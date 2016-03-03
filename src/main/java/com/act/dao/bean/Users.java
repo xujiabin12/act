@@ -1,6 +1,7 @@
 package com.act.dao.bean;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -38,6 +39,8 @@ public class Users implements Serializable{
 	
 	private String headimg; //头像
 	
+	private Date createdt;
+	
 	
 	public Users(){}
 	
@@ -52,6 +55,14 @@ public class Users implements Serializable{
 	
 	
 	
+
+	public Date getCreatedt() {
+		return createdt;
+	}
+
+	public void setCreatedt(Date createdt) {
+		this.createdt = createdt;
+	}
 
 	public String getNickname() {
 		return nickname;
