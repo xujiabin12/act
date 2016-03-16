@@ -57,9 +57,9 @@ public class GroupSerices {
 		logger.info("==queryByPage=={},{}",groupId,pageNo);
 		pageNo = (pageNo - 1) * pageSize;
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("groupId", groupId);
+		map.put("groupid", groupId);
 		
-		String sql = "from GroupHistory where groupId = :groupId order by createdt desc ";
+		String sql = "from GroupHistory where groupid = :groupid order by createdt desc ";
 		List<GroupHistory> list = dao.queryListByPage(sql, map, pageNo, pageSize);
 		
 		return Response.SUCCESS().put("list", list).put("pageNo", pageNo + 1);
