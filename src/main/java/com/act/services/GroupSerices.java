@@ -41,7 +41,7 @@ public class GroupSerices {
 	@Autowired
 	CommonDao dao;
 	
-	private int pageSize = 20;
+	private int pageSize = 10;
 	
 	public void saveMsg(GroupHistory gh){
 		try {
