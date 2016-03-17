@@ -53,8 +53,9 @@ public class WxController {
 		}else{
 			logger.info("目录不存在该文件，去下载");
 			String url = wxService.getDownVoiceUrl(voiceId);
-			logger.info("downUrl:",url);
+			logger.info("downUrl:{}",url);
 			String webUrl = AmrToMp3.downloadFromUrl(url, util.getVoiceUpload(), voiceId,util.getVoiceUrl());
+			logger.info("下载完毕，返回访问的URL：{}",webUrl);
 			return Response.SUCCESS().put("url", webUrl).toJson();
 		}
 	} 

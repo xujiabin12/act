@@ -33,11 +33,11 @@ public class AmrToMp3 {
             logger.info("下载完毕，开始转换MP3");
             changeToMp3(fource,new File(dir + name+".mp3"));
             logger.info("转换MP3成功");
-            return httpUrl+name+".mp3";
         } catch (Exception e) {  
-            e.printStackTrace();  
+//        	logger.error("downloadFromUrl==出错",e);
+//            e.printStackTrace();  
         }   
-        return null;
+        return httpUrl+name+".mp3";
     }  
 
 		public static void changeToMp3(File source,File target) throws Exception{
