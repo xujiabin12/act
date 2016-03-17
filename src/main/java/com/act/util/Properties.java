@@ -17,6 +17,32 @@ public class Properties {
 	
 	@Value("${clientSecret}")
 	private String clientSecret;
+	
+	@Value("${voiceUpload}")
+	private String voiceUpload;
+
+	
+	@Value("${voiceUrl}")
+	private String voiceUrl;
+
+
+	
+	
+	public String getVoiceUpload() {
+		return voiceUpload;
+	}
+
+	public void setVoiceUpload(String voiceUpload) {
+		this.voiceUpload = voiceUpload;
+	}
+
+	public String getVoiceUrl() {
+		return voiceUrl;
+	}
+
+	public void setVoiceUrl(String voiceUrl) {
+		this.voiceUrl = voiceUrl;
+	}
 
 	public String getAppKey() {
 		return appKey;

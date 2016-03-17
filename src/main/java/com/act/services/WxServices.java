@@ -26,6 +26,18 @@ public class WxServices {
     RedisTemplate redisTemplate;
 	
 	
+	/**
+	 * 获取下载语音地址
+	 * @param mediaId
+	 * @return
+	 */
+	public String getDownVoiceUrl(String mediaId){
+		StringBuilder sb = new StringBuilder("http://file.api.weixin.qq.com/cgi-bin/media/get?");
+		sb.append("access_token=").append(getWxToken()).append("&media_id=").append(mediaId);
+		return sb.toString();
+	}
+	
+	
 	
 	//获取openid
 	public String getOpenIdByCode(String code) throws UeFailException{
