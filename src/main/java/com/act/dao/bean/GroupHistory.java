@@ -114,7 +114,7 @@ public class GroupHistory  implements Serializable{
 	}
 
 	public String getCreatedtStr() {
-		createdtStr = DateUtils.formatDatetime(this.createdt);
+		createdtStr = DateUtils.formatTime(this.createdt);
 		return createdtStr;
 	}
 
