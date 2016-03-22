@@ -26,18 +26,21 @@ public class AmrToMp3 {
 	
 	public static String downloadFromUrl(String url,String dir,String name,String httpUrl) {  
 		  logger.info("downloadFromUrl,url:{}"+url);
+		  File fource = null;
         try {  
             URL httpurl = new URL(url);  
-            File fource = new File(dir + name+".amr");  
+            fource = new File(dir + name+".amr");  
             FileUtils.copyURLToFile(httpurl, fource);  
             logger.info("下载完毕，开始转换MP3");
             changeToMp3(fource,new File(dir + name+".mp3"));
-            logger.info("转换MP3成功，删除amr文件");
-            fource.delete();
+           
         } catch (Exception e) {  
 //        	logger.error("downloadFromUrl==出错",e);
 //            e.printStackTrace();  
-        }   
+        }finally{
+        	 logger.info("转换MP3成功，删除amr文件");
+             fource.delete();
+        }
         return httpUrl+name+".mp3";
     }  
 
