@@ -41,11 +41,6 @@ public class WxController {
 	public String placeVoice(@RequestParam("voiceId") String voiceId){
 		logger.info("placeVoice，voiceId:{}",voiceId);
 		
-		Object obj = redisTemplate.opsForValue().get(voiceId);
-		if(obj != null){
-			return Response.SUCCESS().put("url", String.valueOf(obj)).toJson();
-		}
-		
 		File file = new File(util.getVoiceUpload()+voiceId+".mp3");
 		if(file.exists()){
 			logger.info("目录存在该文件");
@@ -69,10 +64,8 @@ public class WxController {
 		
 		logger.info("downUrl:",url);
 		
-		String webUrl = AmrToMp3.downloadFromUrl(url, util.getVoiceUpload(), voiceId,util.getVoiceUrl());
-		if(StringUtil.isNotBlank(webUrl)){
-			redisTemplate.opsForValue().set(voiceId, webUrl,2,TimeUnit.DAYS);
-		}
+		AmrToMp3.downloadFromUrl(url, util.getVoiceUpload(), voiceId,util.getVoiceUrl());
+		
 		return Response.SUCCESS().toJson();
 	}
 	
