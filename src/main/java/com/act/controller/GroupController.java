@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,15 +99,18 @@ public class GroupController extends AbstractController{
 	@RequestMapping(value="/joinGroup",method=RequestMethod.POST)
 	@ResponseBody
 	public String joinGroup(@RequestParam(value="groupId",required=true)String groupId,
-							@RequestParam(value="code",required=true)String code){
+							@RequestParam(value="code",required=false)String code,
+							@RequestParam(value="openId",required=false)String openId){
 		try {
-			logger.info("joinGroup===groupid:{}，code:{}",groupId,code);
-			String openid = wxService.getOpenIdByCode(code);
+			logger.info("joinGroup===groupid:{}，code:{},openId:{}",new String[]{groupId,code,openId});
+			if(StringUtils.isBlank(openId)){
+				openId = wxService.getOpenIdByCode(code);
+			}
 			
-			Users user = userService.selectByOpenid(openid);
+			Users user = userService.selectByOpenid(openId);
 			if(user == null){
 				logger.info("==新增用户==");
-				String userInfo = wxService.getWxUserWxInfo(openid);
+				String userInfo = wxService.getWxUserWxInfo(openId);
 				Map map = JsonUtil.json2Map(userInfo);
 				
 				if(String.valueOf(map.get("subscribe")).equals("0")){

@@ -1,15 +1,14 @@
 https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx1ffebf2bd2e6fe48&redirect_uri=http%3A%2F%2Fmobile.u-ef.cn%2Fueweb%2Findex.html%3FgroupId%3D157071833605079516&response_type=code&scope=snsapi_base&state=act#wechat_redirect
 
-101.201.209.109 
+101.201.209.109  Annsong606
 
-Annsong606
-
-
-ue
-
-ycyx  
+ue ycyx  
 
 ycyx123
+
+删除5天以前的mp3
+find /actdata/voice -mtime +5 | xargs rm -rf
+
 
 
 微信 
