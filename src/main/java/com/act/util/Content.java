@@ -21,5 +21,8 @@ public class Content {
 	public static final String WX_JSAPI_TICKET = "wx:jsapi:ticket";
 	
 	public static final String INDEX = "http://mobile.u-ef.cn/index.html";
+	
+	//加入群组连接推送
+	public static final String JOINGROUPURL = "hiWH6Nyvcdvaph6zmnHv-P1h9i3y_49DecDLeYMWr38";
 
 }

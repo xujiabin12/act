@@ -76,6 +76,23 @@ public class GroupController extends AbstractController{
 	
 	
 	
+	@ResponseBody
+	@RequestMapping(value = "/createCampaignUrl",method=RequestMethod.POST)
+	public String createCampaignUrl(@RequestParam(value="url",required=true)String url){
+		logger.info("创建宣传页URL:{}", url);
+		
+		StringBuffer sb = new StringBuffer(WxConfig.STARTAUTHURL);
+		
+		try {
+			url = URLEncoder.encode(url, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		sb.append(url).append(WxConfig.ENDAUTHURL);
+		
+		return Response.SUCCESS().put("url", sb.toString()).toJson();
+	}
+	
 	
 	@ResponseBody
 	@RequestMapping(value = "/createUrl",method=RequestMethod.POST)
@@ -263,13 +280,26 @@ public class GroupController extends AbstractController{
 			
 		}
 		
-		//设置加入群组URL
+		//设置加入群组URL并推送至用户
 		@RequestMapping(value="/getJoinGroupUrl",method=RequestMethod.POST)
 		@ResponseBody
 		public String getJoinGroupUrl(){
-			
 			return groupService.getJoinGroupUrl().toJson();
+		}
+		
+		@RequestMapping(value="/sendGroupUrl",method=RequestMethod.POST)
+		@ResponseBody
+		public String sendGroupUrl(@RequestParam(value="code",required=false)String code){
 			
+			try {
+				 groupService.sendJoinGroupUrl(code);
+			}catch (UeFailException e) {
+				return Response.FAIL(e.getMessage()).toJson();
+			}catch(Exception e1){
+				logger.error("错误",e1);
+				return Response.FAIL("进入群组失败").toJson();
+			}
+			return Response.SUCCESS().toJson();
 		}
 	
 	

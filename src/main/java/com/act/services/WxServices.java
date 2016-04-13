@@ -1,7 +1,12 @@
 package com.act.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import net.sf.json.JSONObject;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.slf4j.Logger;
@@ -9,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
 import com.act.exception.UeFailException;
 import com.act.util.Content;
 import com.act.util.HttpUtil;
@@ -24,6 +30,23 @@ public class WxServices {
 	
 	@Autowired
     RedisTemplate redisTemplate;
+	
+	
+	
+	public void sendTemplateMsg(String msg)throws Exception{
+		logger.info("==sendTemplateMsg=={}",msg);
+		
+		String accessToken=getWxToken();
+		
+		String url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=".concat(accessToken);
+		
+		String result = HttpUtil.doPost(url, msg);
+		
+		logger.info("发送模版消息返回结果:{}",result);
+	}
+	
+	
+	
 	
 	
 	/**
@@ -86,8 +109,7 @@ public class WxServices {
 		
 	}
 	
-	
-	
+
 	
 	
 	//拼接获取openid的url
@@ -104,9 +126,7 @@ public class WxServices {
 		sb.append(WxConfig.GRANT_TYPE);
 		
 		return sb.toString();
-	}
-	
-	
+	}	
 	
 	
 	int jsticket = 0;
@@ -183,6 +203,45 @@ public class WxServices {
 			throw new UeFailException("获取token失败");
 		}
 		return null;
+	}
+	
+	
+	
+	
+
+	public String buildMsg(String openId,String templateId,String url,String title,String remark,List<String> datas){
+		JSONObject root = new JSONObject();
+		root.put("touser", openId);
+		root.put("template_id", templateId);
+		root.put("url", url);
+			JSONObject data = new JSONObject();
+			data.put("first", new JSONObject().fromObject("{'value':'"+title+"'}"));
+			for(int i=0;i<datas.size();i++){
+				data.put("keyword"+(i+1), new JSONObject().fromObject("{'value':'"+datas.get(i)+"'}"));
+			}
+			data.put("remark",  new JSONObject().fromObject("{'value':'"+remark+"'}"));
+		root.put("data", data);
+		
+		return root.toString();
+	}
+	
+	
+	public static void main(String[] s){
+		JSONObject root = new JSONObject();
+		root.put("touser", "222222");
+		root.put("template_id", "4444444444");
+		root.put("url", "111111");
+		List<String> datas = new ArrayList<String>();
+		datas.add("eeeeeeeeee");
+		datas.add("rrrrrrrrrrr");
+			JSONObject data = new JSONObject();
+			data.put("first", new JSONObject().fromObject("{'value':'我是'}"));
+			for(int i=0;i<datas.size();i++){
+				data.put("keynote"+(i+1), new JSONObject().fromObject("{'value':'"+datas.get(i)+"'}"));
+			}
+			data.put("remark",  new JSONObject().fromObject("{'value':'我是'}"));
+		root.put("data", data);
+		System.out.println(root.toString());
 	}
 
 }

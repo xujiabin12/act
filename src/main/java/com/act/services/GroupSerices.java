@@ -1,9 +1,11 @@
 package com.act.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +13,17 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.act.beans.enums.ErrorCode;
 import com.act.beans.enums.YesOrNo;
 import com.act.dao.CommonDao;
 import com.act.dao.bean.GroupHistory;
 import com.act.dao.bean.Groups;
 import com.act.dao.bean.UserGroup;
 import com.act.dao.bean.Users;
+import com.act.exception.UeFailException;
 import com.act.util.Content;
 import com.act.util.IdBuilder;
+import com.act.util.JsonUtil;
 import com.act.util.Response;
 import com.act.util.StringUtil;
 
@@ -37,6 +42,11 @@ public class GroupSerices {
 	@Autowired
     RedisTemplate redisTemplate;
 	
+	@Autowired
+	WxServices wxService;
+	
+	@Autowired 
+	UserServices userService;
 	
 	@Autowired
 	CommonDao dao;
@@ -74,8 +84,38 @@ public class GroupSerices {
 	public Response getJoinGroupUrl(){
 		logger.info("=getJoinGroupUrl=");
 		Object obj = redisTemplate.opsForValue().get(Content.GROUPURL);
-		String url = obj!=null?obj.toString():"";
-		return Response.SUCCESS().put("url", url);
+		if(obj == null){
+			return Response.FAIL("请联系老师，设置当前群组连接");
+		}
+		return Response.SUCCESS().put("url", obj.toString());
+	}
+	
+	
+	public void sendJoinGroupUrl(String code)throws Exception{
+		logger.info("=sendJoinGroupUrl={}",code);
+		Object obj = redisTemplate.opsForValue().get(Content.GROUPURL);
+		if(obj == null){
+			throw new UeFailException("请联系老师，设置当前群组连接");
+		}
+		String openId = wxService.getOpenIdByCode(code);
+		logger.info("==更新用户信息==");
+		String userInfo = wxService.getWxUserWxInfo(openId);
+		Map map = JsonUtil.json2Map(userInfo);
+		String headImg = MapUtils.getString(map, "headimgurl");
+		String nickName = MapUtils.getString(map, "nickname");
+		Users user = userService.selectByOpenid(openId);
+		if(!user.getHeadimg().equals(headImg) || !user.getNickname().equals(nickName)){
+			user.setHeadimg(headImg);
+			user.setNickname(nickName);
+			dao.update(user);
+			logger.info("==更新用户信息结束==");
+		}
+		logger.info("发送模版消息");
+		List<String> datas = new ArrayList<String>();
+		datas.add("ACT学堂聊天室");
+		datas.add(user.getNickname());
+		String msg = wxService.buildMsg(openId,Content.JOINGROUPURL,obj.toString(),"您好，感谢您的分享，点击次消息进入聊天室","若无法加入，请及时联系老师",datas);
+		wxService.sendTemplateMsg(msg);
 	}
 	
 	
