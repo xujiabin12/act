@@ -22,6 +22,7 @@ import com.act.exception.UeFailException;
 import com.act.services.GroupSerices;
 import com.act.services.UserServices;
 import com.act.services.WxServices;
+import com.act.util.Content;
 import com.act.util.IdBuilder;
 import com.act.util.JsonUtil;
 import com.act.util.Response;
@@ -83,7 +84,7 @@ public class GroupController extends AbstractController{
 		
 		StringBuffer sb = new StringBuffer(WxConfig.STARTAUTHURL);
 		
-		String domain = "http://mobile.u-ef.cn/index.html?groupId="+groupId;
+		String domain = Content.INDEX.concat("?groupId="+groupId);
 		try {
 			domain = URLEncoder.encode(domain, "utf-8");
 		} catch (UnsupportedEncodingException e) {

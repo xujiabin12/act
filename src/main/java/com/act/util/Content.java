@@ -19,5 +19,7 @@ public class Content {
 	public static final String WX_TOKEN = "wx:token";
 	
 	public static final String WX_JSAPI_TICKET = "wx:jsapi:ticket";
+	
+	public static final String INDEX = "http://mobile.u-ef.cn/index.html";
 
 }

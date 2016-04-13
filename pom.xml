@@ -575,8 +575,8 @@
                 <redis.port>6379</redis.port>
                 <redis.password>actredis</redis.password>
                 
-                <voiceUpload>/actdata/voice/</voiceUpload>
-                <voiceUrl>http://mobile.u-ef.cn:3333/</voiceUrl>
+                <voiceUpload>/actdata/mobile/mobile/voice/</voiceUpload>
+                 <voiceUrl>http://mobile.u-ef.cn/voice/</voiceUrl>
 			</properties>
 		</profile>
 		<profile>
@@ -596,8 +596,8 @@
                 <redis.port>6379</redis.port>
                 <redis.password>actredis</redis.password>
                 
-                <voiceUpload>/actdata/voice/</voiceUpload>
-                <voiceUrl>http://mobile.u-ef.cn:3333/</voiceUrl>
+                <voiceUpload>/actdata/mobile/mobile/voice/</voiceUpload>
+                <voiceUrl>http://mobile.u-ef.cn/voice/</voiceUrl>
 			</properties>
 		</profile>
 	</profiles>
