@@ -1,10 +1,11 @@
 package com.act.services;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.act.beans.enums.ErrorCode;
 import com.act.beans.enums.YesOrNo;
 import com.act.dao.CommonDao;
 import com.act.dao.bean.GroupHistory;
@@ -26,6 +25,7 @@ import com.act.util.IdBuilder;
 import com.act.util.JsonUtil;
 import com.act.util.Response;
 import com.act.util.StringUtil;
+import com.act.util.wx.WxConfig;
 
 
 
@@ -75,12 +75,26 @@ public class GroupSerices {
 		return Response.SUCCESS().put("list", list).put("pageNo", pageNo + 1);
 	}
 	
-	
-	public void setJoinGroupUrl(String url){
-		logger.info("=setJoinGroupUrl:{}",url);
-		redisTemplate.opsForValue().set(Content.GROUPURL, url);
+	//设置当前群组连接和名称
+	public String setJoinGroupUrl(String groupId) throws Exception{
+		logger.info("=setJoinGroupUrl:{}",groupId);
+		StringBuffer sb = new StringBuffer(WxConfig.STARTAUTHURL);
+		
+		String domain = Content.INDEX.concat("?groupId="+groupId);
+		try {
+			domain = URLEncoder.encode(domain, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		sb.append(domain).append(WxConfig.ENDAUTHURL);
+		
+		redisTemplate.opsForValue().set(Content.GROUPURL, sb.toString());
+		Groups group = dao.queryObject(Groups.class, groupId);
+		redisTemplate.opsForValue().set(Content.GROUPNAME, group.getGroupname());
+		return sb.toString();
 	}
 	
+	//获取当前群组连接
 	public Response getJoinGroupUrl(){
 		logger.info("=getJoinGroupUrl=");
 		Object obj = redisTemplate.opsForValue().get(Content.GROUPURL);
@@ -90,13 +104,14 @@ public class GroupSerices {
 		return Response.SUCCESS().put("url", obj.toString());
 	}
 	
-	
+	//推送群组到用户微信
 	public void sendJoinGroupUrl(String code)throws Exception{
 		logger.info("=sendJoinGroupUrl={}",code);
 		Object obj = redisTemplate.opsForValue().get(Content.GROUPURL);
 		if(obj == null){
 			throw new UeFailException("请联系老师，设置当前群组连接");
 		}
+		String title = String.valueOf(redisTemplate.opsForValue().get(Content.GROUPNAME));
 		String openId = wxService.getOpenIdByCode(code);
 		logger.info("==更新用户信息==");
 		String userInfo = wxService.getWxUserWxInfo(openId);
@@ -112,14 +127,14 @@ public class GroupSerices {
 		}
 		logger.info("发送模版消息");
 		List<String> datas = new ArrayList<String>();
-		datas.add("ACT学堂聊天室");
+		datas.add("ACT学堂<"+title+">");
 		datas.add(user.getNickname());
 		String msg = wxService.buildMsg(openId,Content.JOINGROUPURL,obj.toString(),"您好，感谢您的分享，点击次消息进入聊天室","若无法加入，请及时联系老师",datas);
 		wxService.sendTemplateMsg(msg);
 	}
 	
 	
-	
+	//删除群组
 	public Response deleteGroup(String groupid)throws Exception{
 		logger.info("=删除群组=");
 		hxService.deleteGroup(groupid);

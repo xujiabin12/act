@@ -51,6 +51,12 @@ public class GroupController extends AbstractController{
 	WxServices wxService;
 	
 	
+	/**
+	 * 查询历史记录
+	 * @param groupId
+	 * @param pageNo
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/queryHistory",method=RequestMethod.POST)
 	public String queryHistory(@RequestParam(value="groupId",required=true)String groupId,
@@ -59,7 +65,16 @@ public class GroupController extends AbstractController{
 		return groupService.queryHistoryByPage(groupId, pageNo).toJson();
 	}
 	
-	
+	/**
+	 * 发送消息
+	 * @param groupId
+	 * @param nickName
+	 * @param userName
+	 * @param headimg
+	 * @param message
+	 * @param role
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/sendMsg",method=RequestMethod.POST)
 	public String sendMsg(@RequestParam(value="groupId",required=true)String groupId,
@@ -75,7 +90,11 @@ public class GroupController extends AbstractController{
 	}
 	
 	
-	
+	/**
+	 * 创建微信宣传页url
+	 * @param url
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/createCampaignUrl",method=RequestMethod.POST)
 	public String createCampaignUrl(@RequestParam(value="url",required=true)String url){
@@ -93,27 +112,34 @@ public class GroupController extends AbstractController{
 		return Response.SUCCESS().put("url", sb.toString()).toJson();
 	}
 	
-	
+	/**
+	 * 创建进入群组URL
+	 * @param groupId
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/createUrl",method=RequestMethod.POST)
 	public String createUrl(@RequestParam(value="groupId",required=true)String groupId){
 		logger.info("创建加入群组URL:{}", groupId);
 		
-		StringBuffer sb = new StringBuffer(WxConfig.STARTAUTHURL);
-		
-		String domain = Content.INDEX.concat("?groupId="+groupId);
+		String url = "";
 		try {
-			domain = URLEncoder.encode(domain, "utf-8");
-		} catch (UnsupportedEncodingException e) {
+			url = groupService.setJoinGroupUrl(groupId);
+		} catch (Exception e) {
+			logger.error("createUrlError:",e);
 			e.printStackTrace();
 		}
-		sb.append(domain).append(WxConfig.ENDAUTHURL);
-		
-		return Response.SUCCESS().put("url", sb.toString()).toJson();
+		return Response.SUCCESS().put("url", url).toJson();
 	}
 	
 	
-	//点击这个连接，进入群组
+	/**
+	 * 点击这个连接，进入群组
+	 * @param groupId
+	 * @param code
+	 * @param openId
+	 * @return
+	 */
 	@RequestMapping(value="/joinGroup",method=RequestMethod.POST)
 	@ResponseBody
 	public String joinGroup(@RequestParam(value="groupId",required=true)String groupId,
@@ -148,6 +174,32 @@ public class GroupController extends AbstractController{
 			return Response.FAIL("进入群组失败").toJson();
 		}
 		
+	}
+	
+	//获取当前群组的URL
+	@RequestMapping(value="/getJoinGroupUrl",method=RequestMethod.POST)
+	@ResponseBody
+	public String getJoinGroupUrl(){
+		return groupService.getJoinGroupUrl().toJson();
+	}
+	
+	
+	
+	
+	//用户分享宣传页后，将群组URL推送到用户
+	@RequestMapping(value="/sendGroupUrl",method=RequestMethod.POST)
+	@ResponseBody
+	public String sendGroupUrl(@RequestParam(value="code",required=false)String code){
+		
+		try {
+			 groupService.sendJoinGroupUrl(code);
+		}catch (UeFailException e) {
+			return Response.FAIL(e.getMessage()).toJson();
+		}catch(Exception e1){
+			logger.error("错误",e1);
+			return Response.FAIL("发送群组URL推送失败").toJson();
+		}
+		return Response.SUCCESS().toJson();
 	}
 	
 	
@@ -250,7 +302,7 @@ public class GroupController extends AbstractController{
 		}
 		
 		
-		//删除群组
+		//踢出群组
 		@RequestMapping(value="/outGroup",method=RequestMethod.POST)
 		@ResponseBody
 		public String outGroup(@RequestParam(value="groupid",required=true)String groupid,
@@ -263,45 +315,10 @@ public class GroupController extends AbstractController{
 				return Response.FAIL(e.getMessage()).toJson();
 			}catch(Exception e1){
 				logger.error("错误",e1);
-				return Response.FAIL("删除群组失败").toJson();
+				return Response.FAIL("踢出群组失败").toJson();
 			}
 			
 		}
 		
-		
-		//设置加入群组URL
-		@RequestMapping(value="/setJoinGroupUrl",method=RequestMethod.POST)
-		@ResponseBody
-		public String setJoinGroupUrl(@RequestParam(value="url",required=true)String url){
-			
-			groupService.setJoinGroupUrl(url);
-			
-			return Response.SUCCESS().toJson();
-			
-		}
-		
-		//设置加入群组URL并推送至用户
-		@RequestMapping(value="/getJoinGroupUrl",method=RequestMethod.POST)
-		@ResponseBody
-		public String getJoinGroupUrl(){
-			return groupService.getJoinGroupUrl().toJson();
-		}
-		
-		@RequestMapping(value="/sendGroupUrl",method=RequestMethod.POST)
-		@ResponseBody
-		public String sendGroupUrl(@RequestParam(value="code",required=false)String code){
-			
-			try {
-				 groupService.sendJoinGroupUrl(code);
-			}catch (UeFailException e) {
-				return Response.FAIL(e.getMessage()).toJson();
-			}catch(Exception e1){
-				logger.error("错误",e1);
-				return Response.FAIL("进入群组失败").toJson();
-			}
-			return Response.SUCCESS().toJson();
-		}
-	
-	
 
 }
