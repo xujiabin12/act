@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.slf4j.Logger;
@@ -146,12 +147,12 @@ public class WxServices {
 				String result = HttpUtil.doClientGet(url);
 				logger.info("获取jsapitticket返回结果：{}",result);
 				Map map = JsonUtil.json2Map(result);
-				if(map.get("errcode") != null  && jsticket < 5){
+				if(MapUtils.getInteger(map, "errcode",-1) != 0  && jsticket < 5){
 					logger.info("==获取jsticket出错，重新获取");
 					jsticket ++;
 					getJsApiTicket();
 				}else{
-					String ticket = (String) map.get("ticket");
+					String ticket = MapUtils.getString(map, "ticket");
 					redisTemplate.opsForValue().set(Content.WX_JSAPI_TICKET, ticket, 7000, TimeUnit.SECONDS);//7000秒不到两个小时
 					jsticket = 0;
 					return ticket;
@@ -189,7 +190,7 @@ public class WxServices {
 				tokencount ++;
 				getWxToken();
 			}else{
-				String token = (String) map.get("access_token");
+				String token =MapUtils.getString(map, "access_token");
 				redisTemplate.opsForValue().set(Content.WX_TOKEN, token, 7000, TimeUnit.SECONDS);//7000秒不到两个小时
 				tokencount = 0;
 				return token;
