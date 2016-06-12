@@ -33,4 +33,15 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 	</bean>
 	
 	<aop:aspectj-autoproxy/> 
+	
+	
+	<bean id="multipartResolver"  
+        class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+        <property name="maxUploadSize">  
+            <value>104857600</value>  
+        </property>  
+        <property name="maxInMemorySize">  
+            <value>4096</value>  
+        </property>  
+    </bean>  
 </beans>

@@ -24,10 +24,31 @@ public class Properties {
 	
 	@Value("${voiceUrl}")
 	private String voiceUrl;
+	
+	@Value("${imgUpload}")
+	private String imgUpload;
+	@Value("${imgUrl}")
+	private String imgUrl;
 
 
 	
 	
+	public String getImgUrl() {
+		return imgUrl;
+	}
+
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
+	}
+
+	public String getImgUpload() {
+		return imgUpload;
+	}
+
+	public void setImgUpload(String imgUpload) {
+		this.imgUpload = imgUpload;
+	}
+
 	public String getVoiceUpload() {
 		return voiceUpload;
 	}
