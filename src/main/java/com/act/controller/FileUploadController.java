@@ -62,6 +62,8 @@ public class FileUploadController {
 			logger.error("上传图片出错",e);
 			e.printStackTrace();
 			return Response.FAIL("发送图片失败").toJson();
+		}finally{
+			System.gc();
 		}
 	}
 	

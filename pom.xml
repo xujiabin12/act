@@ -579,13 +579,13 @@
 				<maven.test.skip>true</maven.test.skip>
 				
 				<database.driverClassName>com.mysql.jdbc.Driver</database.driverClassName>
-				<database.url>jdbc:mysql://127.0.0.1:3306/ue?characterEncoding=utf-8</database.url>
-				<database.username>root</database.username>
-				<database.password>123456</database.password>
-				
-<!-- 				<database.url>jdbc:mysql://101.201.209.109:3306/ue?characterEncoding=utf-8</database.url> -->
+<!-- 				<database.url>jdbc:mysql://127.0.0.1:3306/ue?characterEncoding=utf-8</database.url> -->
 <!-- 				<database.username>root</database.username> -->
-<!-- 				<database.password>act!@#</database.password> -->
+<!-- 				<database.password>123456</database.password> -->
+				
+				<database.url>jdbc:mysql://101.201.209.109:3306/ue?characterEncoding=utf-8</database.url>
+				<database.username>root</database.username>
+				<database.password>act!@#</database.password>
 				
 				<log.level>info</log.level>
 				<log.dirs>/data/logs/act/</log.dirs>
